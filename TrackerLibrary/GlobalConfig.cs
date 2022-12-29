@@ -9,18 +9,20 @@ namespace TrackerLibrary
 {
     public static class GlobalConfig
     {
-        public static List<IDataConnection> Connections { get; private set; }=new List<IDataConnection>(){ };   
-        public static void InitializeConnections(bool database,bool textFiles)
-        {if(database)
+        public static IDataConnection Connections { get; private set; } 
+        public static void InitializeConnections(DatabaseType connectionType)
+        {
+            
+            if(connectionType==DatabaseType.Sql)
             {
                 //TODO - Create the SQL Connection
                 SQLConnector sql=new SQLConnector();
-                Connections.Add(sql);
+                Connections=sql;
             }
-        if(textFiles)
+        if(connectionType == DatabaseType.TextFile) 
             {
                 TextConnector text=new TextConnector();
-                Connections.Add(text); 
+                Connections=text; 
                 //TODO - Create the Text Connection
             }
         }
@@ -30,7 +32,7 @@ namespace TrackerLibrary
         ///Added manuall in Tracker Library
         ///<see href="https://stackoverflow.com/questions/59569075/package-type-dotnetplatform-that-is-incompatible-with-this-project"/>
         ///</summary>
-        public static string cnnString(string name)
+        public static string CnnString(string name)
         {
             
             return ConfigurationManager.ConnectionStrings[name].ConnectionString;

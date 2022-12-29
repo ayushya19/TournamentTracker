@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using TrackerLibrary;
+
 namespace TournamentTrackerUI
 {
     internal static class Program
@@ -13,7 +16,7 @@ namespace TournamentTrackerUI
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //Initialize the database connection
-            TrackerLibrary.GlobalConfig.InitializeConnections(true,true); 
+            TrackerLibrary.GlobalConfig.InitializeConnections(DatabaseType.TextFile); 
             Application.Run(new CreatePrizeForm());
             //Application.Run(new TournamentDashbordForm());
         }
