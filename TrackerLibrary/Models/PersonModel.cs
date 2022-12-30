@@ -7,22 +7,27 @@ using System.Threading.Tasks;
 namespace TrackerLibrary.Models
 {
     public class PersonModel
-    {/// <summary>
-     /// Represents the first name of person
-     /// </summary>
-        public int firstName { get; set; }
+    {
+        /// <summary>
+        /// Unique Identifier for the prize
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
+        /// Represents the first name of person
+        /// </summary>
+        public string firstName { get; set; }
         /// <summary>
         /// Represents the last name of person
         /// </summary>
-        public int lastName { get; set; }
+        public string lastName { get; set; }
         /// <summary>
         /// Represents the email address of person
         /// </summary>
-        public int emailAddress { get; set; }
+        public string emailAddress { get; set; }
 
         /// <summary>
         /// Represents the cell phone number of person
         /// </summary>
-        public int cellPhoneNumber { get; set; }
+        public long cellPhoneNumber { get; set; }
     }
 }

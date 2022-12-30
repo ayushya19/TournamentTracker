@@ -63,5 +63,42 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             File.WriteAllLines(filename.FullFilePath(), lines);
         }
 
+
+
+
+
+
+
+        //--------------------------------------------------PERSON MODEL-----------------------------------------------------------------
+        public static List<PersonModel> ConvertToPeopleModel(this List<string> lines)
+        {
+            List<PersonModel> output = new List<PersonModel>();
+            foreach (string line in lines)
+            {
+                string[] cols = line.Split(',');
+                PersonModel p = new PersonModel();
+                p.id = int.Parse(cols[0]);
+                p.firstName = cols[1];
+                p.lastName = cols[2];
+                p.emailAddress = cols[0];
+                p.cellPhoneNumber = int.Parse(cols[0]);
+                output.Add(p);
+
+
+            }
+            return output;
+        }
+
+        public static void SaveToPeopleFile(this List<PersonModel> models, string filename)
+        {
+            List<string> lines = new List<string>();
+
+            foreach (PersonModel p in models)
+            {
+                lines.Add($"{p.id},{p.firstName},{p.lastName},{p.emailAddress},{p.cellPhoneNumber}");
+            }
+            File.WriteAllLines(filename.FullFilePath(), lines);
+        }
+
     }
 }
