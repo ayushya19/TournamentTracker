@@ -19,7 +19,7 @@ namespace TrackerLibrary
                 SQLConnector sql=new SQLConnector();
                 Connection=sql;
             }
-        if(connectionType == DatabaseType.TextFile) 
+            if(connectionType == DatabaseType.TextFile) 
             {
                 TextConnector text = new();
                 Connection=text; 

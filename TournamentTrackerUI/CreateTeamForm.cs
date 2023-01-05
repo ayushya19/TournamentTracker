@@ -138,6 +138,84 @@ namespace TournamentTrackerUI
                 WireUpList(); 
             }
         }
+
+        private void CreateTeamButton_Click(object sender, EventArgs e)
+        {
+            TeamModel t= new TeamModel();
+            t.teamName = TeamNameTextBox.Text;
+            t.TeamMember = selectedTeamMembers;
+            t = GlobalConfig.Connection.CreateTeam(t);
+        }
+
+        private void TeamNameLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TeamNameTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SelectTeamLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AddNewMemberGroupBox_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void EmailtextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void EmailLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CellPhoneNumbertextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CellPhoneNumberLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LastNameValueTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LastNameLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FirstNameValueTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TournamentPlayerListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SelectTeamMemberDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SelectTeamLabel_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

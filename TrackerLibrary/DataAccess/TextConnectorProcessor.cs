@@ -100,5 +100,60 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             File.WriteAllLines(filename.FullFilePath(), lines);
         }
 
+
+        //--------------------------------------------------Team MODEL-----------------------------------------------------------------
+        public static List<TeamModel> ConvertToTeamModel(this List<string> lines, string peopleFileName)
+        {
+            List<TeamModel> output = new List<TeamModel>();
+            List<PersonModel> people = peopleFileName.FullFilePath().LoadFile().ConvertToPeopleModel();
+            foreach (string line in lines)
+            {
+                //id,team name,list of ids seperated by the pipe
+                //3,Tim's Team,1|3|5
+                string[] cols = line.Split(',');
+                TeamModel tm = new TeamModel();
+                tm.id = int.Parse(cols[0]);
+                tm.teamName = cols[1];
+                string[] personIds = cols[2].Split('|');
+
+                foreach (string id in personIds)
+                {
+                    tm.TeamMember.Add(people.Where(x => x.id == int.Parse(id)).First());
+                }
+                output.Add(tm);
+
+            }
+            return output;
+        }
+
+        public static void SaveToTeamFile(this List<TeamModel> models,string filename) 
+        {
+            List<string> lines = new List<string>();
+            foreach (TeamModel tm in models)
+            {
+                lines.Add($"{tm.id},{tm.teamName},{ConvertPeopleListToString(tm.TeamMember)}");
+            }
+            File.WriteAllLines(filename.FullFilePath(),lines);
+        }
+
+        private static string ConvertPeopleListToString(List<PersonModel> people)
+        {
+            string output = "";
+            //2|5|
+            if(people.Count==0)
+            { return ""; }
+            foreach(PersonModel p in people)
+            {
+                output += $"{p.id}|";
+            }
+            output= output.Substring(0,output.Length-1);
+            return output;  
+        }
+
     }
+
+
+    
+
+
 }
