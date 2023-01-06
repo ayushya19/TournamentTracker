@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackerLibrary;
+using TrackerLibrary.DataAccess;
 using TrackerLibrary.Models;
 
 namespace TournamentTrackerUI
@@ -17,12 +18,12 @@ namespace TournamentTrackerUI
     {
         private List<PersonModel> availableTeamMembers = GlobalConfig.Connection.GetPerson_All();
         private List<PersonModel> selectedTeamMembers = new List<PersonModel>();
-
-        public CreateTeamForm()
+        private ITeamRequester callinForm;
+        public CreateTeamForm(ITeamRequester caller)
         {   
             InitializeComponent();
             //CreateSampleData();
-
+            callinForm = caller;
             WireUpList();
         }
 
@@ -145,6 +146,8 @@ namespace TournamentTrackerUI
             t.teamName = TeamNameTextBox.Text;
             t.TeamMember = selectedTeamMembers;
             t = GlobalConfig.Connection.CreateTeam(t);
+            callinForm.TeamComplete(t);
+            this.Close();
         }
 
         private void TeamNameLabel_Click(object sender, EventArgs e)
