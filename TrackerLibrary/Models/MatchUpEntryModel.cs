@@ -12,6 +12,13 @@ namespace TrackerLibrary.Models
         /// <summary>
         /// Represents One team in the Matchup
         /// </summary>
+        
+        public int Id { get; set; }
+
+
+        /// <summary>
+        /// Represents One team in the Matchup
+        /// </summary>
         public TeamModel competingTeam { get; set; }
 
         /// <summary>

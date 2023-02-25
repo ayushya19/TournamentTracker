@@ -84,12 +84,13 @@ namespace TournamentTrackerUI
             model.EntryFee = fee;
             model.EnteredTeam = selectedTeams;
             model.prizes= selectedPrizes;
+            
 
             TournamentLogic.CreateRounds(model);
 
 
 
-            model = GlobalConfig.Connection.CreateTournament(model);
+            GlobalConfig.Connection.CreateTournament(model);
         }
 
         private void CreateNewlinkLabel_LinkClicked(object sender, EventArgs e)

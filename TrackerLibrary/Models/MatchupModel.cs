@@ -25,7 +25,7 @@ namespace TrackerLibrary.Models
         /// <summary>
         /// Represents the Points won after winning the current match up
         /// </summary>
-        public int matchUpPoints { get; set; }
+       // public int matchUpPoints { get; set; }
 
         public int matchUpRound { get; set; }
     }

@@ -10,16 +10,14 @@ namespace TrackerLibrary.DataAccess
     // TODO - Wire up the createPrize for text files
     public class TextConnector : IDataConnection
     {
-        private const string prizeFiles = "PrizeModel.csv";
-        private const string PersonFiles = "PersonModel.csv";
-        private const string TeamFiles = "TeamModel.csv";
-        private const string TournamentFile = "TournamentModel.csv";
+        
+
         public PrizeModel CreatePrize(PrizeModel model)
         {
             // Load the Text file
             // Convert the text to List<PrizeModel>
 
-            List<PrizeModel>prizes=prizeFiles.FullFilePath().LoadFile().ConvertToPrizeModel();
+            List<PrizeModel>prizes= GlobalConfig.prizeFile.FullFilePath().LoadFile().ConvertToPrizeModel();
 
             // Find the ID
             int currentId = 1;
@@ -33,14 +31,14 @@ namespace TrackerLibrary.DataAccess
             // Convert the prizes to list<string>
 
             // Save the list<string> to the text file
-            prizes.SaveToPrizeFile(prizeFiles);
+            prizes.SaveToPrizeFile(GlobalConfig.prizeFile);
 
             return model;
         }
 
         public PersonModel CreatePerson(PersonModel model)
         { 
-            List<PersonModel> people = PersonFiles.FullFilePath().LoadFile().ConvertToPeopleModel();
+            List<PersonModel> people = GlobalConfig.PersonFile.FullFilePath().LoadFile().ConvertToPeopleModel();
             int currentID = 1;
             if (people.Count > 0)
             {
@@ -49,18 +47,18 @@ namespace TrackerLibrary.DataAccess
             }
             model.id = currentID;
             people.Add(model);
-            people.SaveToPeopleFile(PersonFiles);
+            people.SaveToPeopleFile(GlobalConfig.PersonFile);
             return model;
         }
 
         public List<PersonModel> GetPerson_All()
         {
-            return PersonFiles.FullFilePath().LoadFile().ConvertToPeopleModel();
+            return GlobalConfig.PersonFile.FullFilePath().LoadFile().ConvertToPeopleModel();
         }
 
         public TeamModel CreateTeam(TeamModel model)
         {
-            List<TeamModel> teams = TeamFiles.FullFilePath().LoadFile().ConvertToTeamModel(PersonFiles);
+            List<TeamModel> teams = GlobalConfig.TeamFile.FullFilePath().LoadFile().ConvertToTeamModel(GlobalConfig.PersonFile);
             int currentID = 1;
             if (teams.Count > 0)
             {
@@ -69,18 +67,18 @@ namespace TrackerLibrary.DataAccess
             }
             model.id = currentID;
             teams.Add(model);
-            teams.SaveToTeamFile(TeamFiles);
+            teams.SaveToTeamFile(GlobalConfig.TeamFile);
             return model;
         }
 
         public List<TeamModel> GetTeam_All()
         {
-            return TeamFiles.FullFilePath().LoadFile().ConvertToTeamModel(PersonFiles);
+            return GlobalConfig.TeamFile.FullFilePath().LoadFile().ConvertToTeamModel(GlobalConfig.PersonFile);
         }
 
         public TournamentModel CreateTournament(TournamentModel model)
         {
-            List<TournamentModel> tournaments = TournamentFile.FullFilePath().LoadFile().ConvertToTournamentModel(TeamFiles,PersonFiles, prizeFiles);
+            List<TournamentModel> tournaments = GlobalConfig.TournamentFile.FullFilePath().LoadFile().ConvertToTournamentModel(GlobalConfig.TeamFile,GlobalConfig.PersonFile,GlobalConfig.prizeFile);
 
             // Find the ID
             int currentId = 1;
@@ -89,12 +87,14 @@ namespace TrackerLibrary.DataAccess
                 currentId = tournaments.OrderByDescending(x => x.id).First().id + 1;
             }
             model.id = currentId;
+
+            model.SaveRoundsToFile(GlobalConfig.MatchupFile, GlobalConfig.MatchupEntryFIle);
             // Add the new record with the new ID(max+1)
             tournaments.Add(model);
             // Convert the prizes to list<string>
 
             // Save the list<string> to the text file
-            tournaments.SaveToTournamentFile(TournamentFile);
+            tournaments.SaveToTournamentFile(GlobalConfig.TournamentFile);
 
             return model;
         }

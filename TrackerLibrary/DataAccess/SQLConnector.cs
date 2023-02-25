@@ -1,8 +1,10 @@
 ﻿using Dapper;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -114,14 +116,86 @@ namespace TrackerLibrary.DataAccess
             using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
             {
 
-                SaveTournament(model, connection);
+                SaveTournament(connection, model);
                 SaveTournamentPrize(model, connection);
-                SaveTournamentTeams(model, connection);
+                SaveTournamentEntries(model, connection);
+                SaveTournamentRound(model, connection);
                 return model;
             }
         }
 
-        private static void SaveTournamentTeams(TournamentModel model, IDbConnection connection)
+        private void SaveTournamentRound(TournamentModel model,IDbConnection connection)
+        {
+            //List<List<MatchUpRound>> Rounds
+            //List<MatchupEntryModel> Entries
+
+            // Loop through the rounds
+            // Loop through the matchups
+            // Save the matchups
+            // Loop through the entries and save them
+            foreach (List<MatchupModel> round in model.Rounds)
+            {
+                foreach (MatchupModel matchup in round)
+                {
+                    var p = new DynamicParameters();
+                    p.Add("@tournamentid", model.id);
+                    p.Add("@matchupround", matchup.matchUpRound);
+                    p.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                    connection.Execute("dbo.spMatchups_Insert", param: p, commandType: CommandType.StoredProcedure);
+                    matchup.id = p.Get<int>("@id");
+
+                    foreach(MatchUpEntryModel entry in matchup.entries)
+                    {
+                        //p.Add("@MatchupId",matchup.id);
+                        
+                        //if (entry.parentMatchup == null)
+                        //{
+                        //    p.Add("@ParentMatchupId", null);
+                        //}
+                        //else
+                        //{
+                        //    p.Add("@ParentMatchupId", entry.competingTeam.id);
+                        //}
+                        
+                        //if(entry.competingTeam==null)
+                        //{ 
+                        //    p.Add("@TeamCompetingId", null);
+                        //}
+                        //else {
+                        //    p.Add("@TeamCompetingId", entry.competingTeam.id);
+                        //}
+                        //p.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                        //connection.Execute("dbo.spMatchupEntries_Insert", param: p, commandType: CommandType.StoredProcedure);
+                        //matchup.id = p.Get<int>("@id");
+
+                        p=new DynamicParameters();
+                        p.Add("@MatchupId", matchup.id);
+                        if(entry.parentMatchup!= null)
+                        {
+                        p.Add("@ParentMatchupId", entry.parentMatchup.id);
+                        }
+                        else
+                        {
+                            p.Add("@ParentMatchupId", null);
+                        }
+                        if (entry.competingTeam != null)
+                        { p.Add("@TeamCompetingid", entry.competingTeam.id); }
+                        else
+                        {
+
+                        { p.Add("@TeamCompetingid", null); }
+                        }
+                        p.Add("@id",0,DbType.Int32,direction:ParameterDirection.Output);
+
+                        connection.Execute("dbo.spMatchupEntries_Insert",p,commandType: CommandType.StoredProcedure);
+
+                    }
+
+                }
+            }
+        }
+
+        private void SaveTournamentEntries(TournamentModel model, IDbConnection connection)
         {
             foreach (TeamModel tm in model.EnteredTeam)
             {
@@ -133,7 +207,7 @@ namespace TrackerLibrary.DataAccess
             }
         }
 
-        private static void SaveTournamentPrize(TournamentModel model, IDbConnection connection)
+        private void SaveTournamentPrize(TournamentModel model, IDbConnection connection)
         {
             foreach (PrizeModel pm in model.prizes)
             {
@@ -145,13 +219,15 @@ namespace TrackerLibrary.DataAccess
             }
         }
 
-        private void SaveTournament(TournamentModel model, IDbConnection connection)
+        private void SaveTournament(IDbConnection connection, TournamentModel model)
         {
             var p = new DynamicParameters();
             p.Add("@TournamentName", model.TournamentName);
-            p.Add("@EntryFee", model.TournamentName);
-            p.Add("@id", dbType: DbType.Int32, direction: ParameterDirection.Output);
-            connection.Execute("dbo.spTournaments_Insert", param: p, commandType: CommandType.StoredProcedure);
+            p.Add("@EntryFee", model.EntryFee);
+            p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            connection.Execute("dbo.spTournaments_Insert", p, commandType: CommandType.StoredProcedure);
+
             model.id = p.Get<int>("@id");
         }
     }

@@ -10,7 +10,7 @@ namespace TrackerLibrary
     public static class TournamentLogic
     {
 
-        //TODO - Wire Our MAtchup
+        //TODO - Wire Our Matchup
         //Order Our list Randomly of teams
         //Check if it is big enouth, if not enough, add in byes 2*2*2*2 - 2**4
         // Create our first round of matchup
